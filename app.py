@@ -1,8 +1,8 @@
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from flask import Flask, render_template
-import os
 from io import BytesIO
 import base64
 from docx import Document
@@ -331,5 +331,6 @@ def index():
         error = f"Error processing datasets: {str(e)}"
         return render_template('index.html', info={}, plots={}, error=error)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
