@@ -1,125 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dataset Visualizations</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>PL Exam Master</title>
     <style>
-        .fade-in {
-            animation: fadeIn 0.7s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-        .dataset:hover img {
-            transform: scale(1.05);
-        }
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 50;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .modal.active {
-            display: flex;
-            opacity: 1;
-        }
-        .modal img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 8px;
-            transform: none;
-        }
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .dataset { margin-bottom: 20px; }
+        img { max-width: 100%; }
+        .error { color: red; }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 font-sans">
-    <!-- Header -->
-    <header class="bg-gray-800 py-6 text-center">
-        <h1 class="text-3xl md:text-4xl font-bold">Dataset Visualizations</h1>
-        <p class="mt-2 text-lg text-gray-400">Insightful data exploration</p>
-    </header>
-
-    <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-4 py-8">
-        <!-- Error Message -->
-        {% if error %}
-            <div class="bg-red-900 border-l-4 border-red-500 text-red-200 p-4 mb-8 rounded fade-in">
-                <p class="font-semibold">Error: {{ error }}</p>
-            </div>
-        {% endif %}
-
-        <!-- Visualizations Section -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {% for label, info in info.items() %}
-                <div class="dataset bg-gray-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 fade-in">
-                    <h2 class="text-xl font-semibold text-white mb-2">{{ label }}</h2>
-                    <p class="text-gray-400 mb-4">{{ info.context }}</p>
-                    {% if plots[label] %}
-                        <img src="{{ plots[label] }}" alt="{{ label }} Visualization" class="w-full h-auto rounded-md" onclick="openModal('{{ plots[label] }}')">
-                    {% else %}
-                        <p class="text-gray-500 italic">No visualization available for {{ label }}</p>
-                    {% endif %}
-                </div>
-            {% endfor %}
+<body>
+    <h1>PL Exam Master</h1>
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+    {% for label, data in info.items() %}
+        <div class="dataset">
+            <h2>{{ label }}</h2>
+            <p>{{ data.context }}</p>
+            {% if plots[label] %}
+                <img src="{{ plots[label] }}" alt="{{ label }} Visualization">
+            {% else %}
+                <p>No visualization available.</p>
+            {% endif %}
         </div>
-    </main>
-
-    <!-- Modal -->
-    <div id="imageModal" class="modal">
-        <span class="modal-close" onclick="closeModal()">&times;</span>
-        <img id="modalImage" src="" alt="Expanded Visualization">
-    </div>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-400 text-center py-4 mt-8">
-        <p>© 2025 Dataset Visualizations. All rights reserved.</p>
-    </footer>
-
-    <!-- JavaScript for Modal -->
-    <script>
-        function openModal(src) {
-            const modal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('modalImage');
-            modalImage.src = src;
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('imageModal');
-            modal.classList.remove('active');
-        }
-
-        // Close modal when clicking outside the image
-        document.getElementById('imageModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
-    </script>
+    {% endfor %}
 </body>
 </html>
